@@ -12,7 +12,7 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
 from sklearn.metrics import f1_score
-import pickle 
+# import pickle 
 
 
 df=pd.read_csv("heart.csv")
@@ -216,10 +216,10 @@ def stage2():
     
 #for opening the file
     model.fit(X_train,Y_train)
-    # st.session_state['model'] = model
-    with open('HeartDisease_model.pkl', 'wb') as f:
-        pickle.dump(model, f)
-        print('model is saved')
+    st.session_state['model'] = model
+    # with open('HeartDisease_model.pkl', 'wb') as f:
+    #     pickle.dump(model, f)
+    #     print('model is saved')
     
     
     
@@ -280,8 +280,8 @@ def stage2():
 def prediction():
     
         # 
-    HeartDisease_model = pickle.load(open('HeartDisease_model.pkl', 'rb'))
-    # HeartDisease_model = st.session_state['model']
+    # HeartDisease_model = pickle.load(open('HeartDisease_model.pkl', 'rb'))
+    HeartDisease_model = st.session_state['model']
     
     st.header(":green[Heart Disease prediction using model]")
     col1, col2,col3=st.columns(3)
