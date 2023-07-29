@@ -12,7 +12,7 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
 from sklearn.metrics import f1_score
-# import pickle 
+import pickle 
 
 
 df=pd.read_csv("heart.csv")
@@ -217,9 +217,9 @@ def stage2():
 #for opening the file
     model.fit(X_train,Y_train)
     st.session_state['model'] = model
-    # with open('HeartDisease_model.pkl', 'wb') as f:
-    #     pickle.dump(model, f)
-    #     print('model is saved')
+    with open('HeartDisease_model.pkl', 'wb') as f:
+     pickle.dump(model, f)
+     print('model is saved')
     
     
     
@@ -280,16 +280,17 @@ def stage2():
 def prediction():
     
         # 
-    # HeartDisease_model = pickle.load(open('HeartDisease_model.pkl', 'rb'))
-    HeartDisease_model = st.session_state['model']
+    HeartDisease_model = pickle.load(open('HeartDisease_model.pkl', 'rb'))
+    # HeartDisease_model = st.session_state['model']
     
     st.header(":green[Heart Disease prediction using model]")
     col1, col2,col3=st.columns(3)
     
     with col1:
         Age=st.number_input(":blue[Age of the people]")
-    
-        
+        if(Age<=0):
+            st.error(":red[invalid input]")
+            Age=False
     with col2:
     
             Sex=st.selectbox(":blue[Gender]",options = ['Male','Female'])
@@ -308,18 +309,33 @@ def prediction():
         ChestPainType=st.selectbox(":red[Type of the Chest pain]",options = ['ATA','ASY','NAP','TA'])
     with col1:    
         RestingBP=st.number_input(":blue[RestingBP value]")
+        if(RestingBP<=0):
+            st.error("invalid input")
+            RestingBP=False
     with col2:   
         Cholesterol=st.number_input(":violet[ Cholestrol value]")
+        if(Cholesterol<=0):
+            st.error("invalid input")
+            Cholesterol=False
     with col3 :  
         FastingBS=st.number_input(":red[BS value]")
+        if(FastingBS<=0):
+            st.error("invalid input")
+            FastingBS=False
     with col1:    
         RestingECG=st.selectbox(":blue[ RestingECG]",options = ['Normal','ST','LVS'])
     with col2:    
         MaxHR=st.number_input(":violet[MaxHR value]")
+        if(MaxHR<=0):
+            st.error("invalid input")
+            MaxHR=False
     with col3 :  
         ExerciseAngina=st.selectbox(":red[exercise angina]",options = ['N','Y'])
     with col1:    
         Oldpeak=st.number_input(":blue[Old peak type]")
+        if(Oldpeak<=0):
+            st.error("invalid input")
+            Oldpeak=False
     with col2:    
         St_Slope=st.selectbox(":violet[st slope category]",options = ['Up','Flat','Down'])
     #code for prediction    
@@ -366,15 +382,19 @@ def prediction():
      #creating a button for prediction   
         
     if st.button("Heart Disease Test Result"):
+        if(Age==False or RestingBP==False or Cholesterol==False or FastingBS==False or MaxHR==False or  Oldpeak==False):
         # st.write(dir(HeartDisease_model))
-        heart_prediction=HeartDisease_model.predict([[Age,Sex,ChestPainType,RestingBP,Cholesterol,FastingBS, RestingECG ,MaxHR,ExerciseAngina,Oldpeak,St_Slope]])
-        
-        if ( heart_prediction[0]==0):
-            heart_dis=":green[The person has not Heart Disease]"
-            
-        else:
-            
-            heart_dis=":Red[The person have Heart Disease]"
+             st.markdown("invalid input")
+        else:    
+         
+             heart_prediction=HeartDisease_model.predict([[Age,Sex,ChestPainType,RestingBP,Cholesterol,FastingBS, RestingECG ,MaxHR,ExerciseAngina,Oldpeak,St_Slope]])
+             
+             if ( heart_prediction[0]==0):
+                 heart_dis=":green[The person has not Heart Disease]"
+                 
+             else:
+                 
+                 heart_dis=":Red[The person have Heart Disease]"
     
     st.success(heart_dis)        
 
