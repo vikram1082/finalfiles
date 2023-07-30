@@ -285,15 +285,15 @@ def prediction():
     
     st.header(":green[Heart Disease prediction using model]")
     col1, col2,col3=st.columns(3)
-    
+    invalid_input = False
     with col1:
         Age=st.number_input(":blue[Age of the people]")
         if(Age<=0):
             st.error(":red[invalid input]")
-            Age=False
+            invalid_input=True
     with col2:
     
-            Sex=st.selectbox(":blue[Gender]",options = ['Male','Female'])
+            Sex=st.selectbox(":violet[Gender]",options = ['Male','Female'])
         
             
 
@@ -306,36 +306,36 @@ def prediction():
           #  main()
         
     with col3:
-        ChestPainType=st.selectbox(":red[Type of the Chest pain]",options = ['ATA','ASY','NAP','TA'])
+        ChestPainType=st.selectbox(":blue[Type of the Chest pain]",options = ['ATA','ASY','NAP','TA'])
     with col1:    
         RestingBP=st.number_input(":blue[RestingBP value]")
         if(RestingBP<=0):
             st.error("invalid input")
-            RestingBP=False
+            invalid_input=True
     with col2:   
         Cholesterol=st.number_input(":violet[ Cholestrol value]")
         if(Cholesterol<=0):
             st.error("invalid input")
-            Cholesterol=False
+            invalid_input=True
     with col3 :  
-        FastingBS=st.number_input(":red[BS value]")
-        if(FastingBS<=0):
+        FastingBS=st.number_input(":blue[BS value]")
+        if(FastingBS<0):
             st.error("invalid input")
-            FastingBS=False
+            invalid_input=True
     with col1:    
         RestingECG=st.selectbox(":blue[ RestingECG]",options = ['Normal','ST','LVS'])
     with col2:    
         MaxHR=st.number_input(":violet[MaxHR value]")
         if(MaxHR<=0):
             st.error("invalid input")
-            MaxHR=False
+            invalid_input=True
     with col3 :  
-        ExerciseAngina=st.selectbox(":red[exercise angina]",options = ['N','Y'])
+        ExerciseAngina=st.selectbox(":blue[exercise angina]",options = ['N','Y'])
     with col1:    
         Oldpeak=st.number_input(":blue[Old peak type]")
-        if(Oldpeak<=0):
+        if(Oldpeak<0):
             st.error("invalid input")
-            Oldpeak=False
+            invalid_input=True
     with col2:    
         St_Slope=st.selectbox(":violet[st slope category]",options = ['Up','Flat','Down'])
     #code for prediction    
@@ -380,23 +380,23 @@ def prediction():
         
         
      #creating a button for prediction   
+    if not invalid_input:
+        if st.button("Heart Disease Test Result"):
+            # if(Age==False or RestingBP==False or Cholesterol==False or FastingBS==False or MaxHR==False or  Oldpeak==False):
+            # # st.write(dir(HeartDisease_model))
+            #      st.markdown("invalid input")
+            # else:    
+            
+            heart_prediction=HeartDisease_model.predict([[Age,Sex,ChestPainType,RestingBP,Cholesterol,FastingBS, RestingECG ,MaxHR,ExerciseAngina,Oldpeak,St_Slope]])
+            
+            if ( heart_prediction[0]==0):
+                heart_dis=(":green[The person has not Heart Disease]")
+                
+            else:
+                
+                heart_dis=(":red[The person have Heart Disease]")
         
-    if st.button("Heart Disease Test Result"):
-        if(Age==False or RestingBP==False or Cholesterol==False or FastingBS==False or MaxHR==False or  Oldpeak==False):
-        # st.write(dir(HeartDisease_model))
-             st.markdown("invalid input")
-        else:    
-         
-             heart_prediction=HeartDisease_model.predict([[Age,Sex,ChestPainType,RestingBP,Cholesterol,FastingBS, RestingECG ,MaxHR,ExerciseAngina,Oldpeak,St_Slope]])
-             
-             if ( heart_prediction[0]==0):
-                 heart_dis=":green[The person has not Heart Disease]"
-                 
-             else:
-                 
-                 heart_dis=":Red[The person have Heart Disease]"
-    
-    st.success(heart_dis)        
+        st.markdown(heart_dis)        
 
 
 
